@@ -2,6 +2,7 @@ package com.example.movies.controller;
 
 
 import ch.qos.logback.core.util.StringUtil;
+import com.example.movies.aspect.annotations.SetRequestAttributes;
 import com.example.movies.dto.MovieCastDTO;
 import com.example.movies.dto.MovieDTO;
 import com.example.movies.entity.Movie;
@@ -25,41 +26,44 @@ public class MovieCastController {
     @Autowired
     private MovieCastService movieCastService;
 
+    @SetRequestAttributes
     @PostMapping("/{id}/cast")
-    public ResponseEntity<?> addMovieCast(@Valid @RequestBody MovieCastDTO movieCastDTO,@PathVariable Long id){
+    public ResponseEntity<?> addMovieCast(@Valid @RequestBody MovieCastDTO movieCastDTO, @PathVariable Long id, HttpServletRequest request) {
 
-        if(id==null|| id!=movieCastDTO.getMovieId()){
+        System.out.println("testing id" + request.getAttribute("Id"));
+        if (id == null || id != movieCastDTO.getMovieId()) {
             return ResponseEntity.ok("Please send a valid movie id.");
         }
         return movieCastService.addMovieCast(movieCastDTO);
     }
 
+    @SetRequestAttributes
     @PostMapping("/{id}/update_cast")
-    public ResponseEntity<?> updateMovieCastName( @Valid @RequestBody MovieCastDTO movieCastDTO,@PathVariable Long id){
+    public ResponseEntity<?> updateMovieCastName(@Valid @RequestBody MovieCastDTO movieCastDTO, @PathVariable Long id) {
 
-        if(movieCastDTO.getId()==null){
+        if (movieCastDTO.getId() == null) {
             return ResponseEntity.ok("Movie cast Id cannot be null.");
         }
-        if(id==null || id!=movieCastDTO.getMovieId()){
+        if (id == null || id != movieCastDTO.getMovieId()) {
             return ResponseEntity.ok("Please send a valid movie id.");
         }
-        return movieCastService.updateMovieCastName(movieCastDTO,id);
+        return movieCastService.updateMovieCastName(movieCastDTO, id);
     }
 
 
+    @SetRequestAttributes
     @GetMapping("/{id}/cast")
-    public ResponseEntity<?> getMovieCast(@PathVariable Long id, HttpServletRequest request){
+    public ResponseEntity<?> getMovieCast(@PathVariable Long id, HttpServletRequest request) {
 
-        System.out.println("testing http session"+ request.getRemoteHost()+request.getSession().getId());
-        HttpSession s=request.getSession();
+        System.out.println("testing http session" + request.getRemoteHost() + request.getSession().getId());
+        HttpSession s = request.getSession();
 
-        System.out.println("testing http csrf"+ request.getAttribute("_csrf"));
-        if(id==null ){
+        System.out.println("testing http csrf" + request.getAttribute("_csrf"));
+        if (id == null) {
             return ResponseEntity.ok("Please send a valid movie id.");
         }
         return movieCastService.getMovieCast(id);
     }
 
-    
 
 }

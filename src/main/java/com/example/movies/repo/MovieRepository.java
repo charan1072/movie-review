@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface MovieRepository extends JpaRepository<Movie,Long> {
+public interface MovieRepository extends JpaRepository<Movie, Long> {
 
-Page<Movie> findAllBy(Pageable pageable);
+    Page<Movie> findAllBy(Pageable pageable);
 }

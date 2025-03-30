@@ -22,7 +22,6 @@ public class MovieCastDTO {
     @NotNull(message = "Movie id cannot be null")
     private Long movieId;
 
-
     @NotNull(message = "Person id cannot be null")
     private Long personId;
 

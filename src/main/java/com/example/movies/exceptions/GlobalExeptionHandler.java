@@ -16,17 +16,17 @@ import java.util.Map;
 public class GlobalExeptionHandler {
 
     @ExceptionHandler(CustomServiceException.class)
-    public ResponseEntity<Map<String,String>> handleCustomServiceException(CustomServiceException ex){
-        Map<String,String> errorResponse=new HashMap<>();
-        errorResponse.put("error",ex.getMessage());
-        return new ResponseEntity<>(errorResponse,HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Map<String, String>> handleCustomServiceException(CustomServiceException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            errors.put(error.getField(), error.getDefaultMessage());  
+            errors.put(error.getField(), error.getDefaultMessage());
         }
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }

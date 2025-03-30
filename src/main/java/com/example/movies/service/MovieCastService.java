@@ -26,64 +26,62 @@ public class MovieCastService {
     @Autowired
     private MovieCastRepository movieCastRepository;
 
-    public ResponseEntity<Map<String,Object>> addMovieCast(MovieCastDTO movieCastDTO){
+    public ResponseEntity<Map<String, Object>> addMovieCast(MovieCastDTO movieCastDTO) {
 
-       Optional<Movie> isMovieExists= movieRepository.findById(movieCastDTO.getMovieId());
-       Map<String,Object> response=new HashMap<>();
-        MovieCast movieCast=new MovieCast();
+        Optional<Movie> isMovieExists = movieRepository.findById(movieCastDTO.getMovieId());
+        Map<String, Object> response = new HashMap<>();
+        MovieCast movieCast = new MovieCast();
 
-       if(isMovieExists.isPresent()){
-         movieCast.setMovieId(movieCastDTO.getMovieId());
-         movieCast.setCharacterName(movieCastDTO.getCharacterName());
-         movieCast.setPersonId(movieCastDTO.getPersonId());
-         movieCast.setRoleType(movieCastDTO.getRoleType());
+        if (isMovieExists.isPresent()) {
+            movieCast.setMovieId(movieCastDTO.getMovieId());
+            movieCast.setCharacterName(movieCastDTO.getCharacterName());
+            movieCast.setPersonId(movieCastDTO.getPersonId());
+            movieCast.setRoleType(movieCastDTO.getRoleType());
 
-         movieCastRepository.save(movieCast);
-       }
-       else {
-           response.put("message","Movie not found");
-           return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-       }
-       response.put("message","Movie sucessfully added");
-       response.put("movie cast",movieCast);
-       return ResponseEntity.status(HttpStatus.OK).body(response);
+            movieCastRepository.save(movieCast);
+        } else {
+            response.put("message", "Movie not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        response.put("message", "Movie sucessfully added");
+        response.put("movie cast", movieCast);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    public ResponseEntity<Map<String,Object>> updateMovieCastName(MovieCastDTO movieCastDTO,Long id){
+    public ResponseEntity<Map<String, Object>> updateMovieCastName(MovieCastDTO movieCastDTO, Long id) {
 
 
-        Optional<MovieCast> isMovieCastExists= movieCastRepository.findById(movieCastDTO.getId());
-        Map<String,Object> response=new HashMap<>();
+        Optional<MovieCast> isMovieCastExists = movieCastRepository.findById(movieCastDTO.getId());
+        Map<String, Object> response = new HashMap<>();
 
 
-        if(isMovieCastExists.isEmpty()){
-            response.put("message","Movie not found");
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        if (isMovieCastExists.isEmpty()) {
+            response.put("message", "Movie not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
-       MovieCast movieCast=isMovieCastExists.get();
+        MovieCast movieCast = isMovieCastExists.get();
         movieCast.setCharacterName(movieCastDTO.getCharacterName());
         movieCast.setRoleType(movieCastDTO.getRoleType());
-            movieCastRepository.save(movieCast);
+        movieCastRepository.save(movieCast);
 
 
-        response.put("message","Character Name updated  successfully");
-        response.put("updated cast",movieCast);
+        response.put("message", "Character Name updated  successfully");
+        response.put("updated cast", movieCast);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
-    public ResponseEntity<Map<String,Object>> getMovieCast(Long movieId){
+    public ResponseEntity<Map<String, Object>> getMovieCast(Long movieId) {
 
 
-        List<MovieCast> isMovieCastExists= movieCastRepository.findByMovieId(movieId);
-        Map<String,Object> response=new HashMap<>();
-        if(isMovieCastExists.isEmpty()){
-            response.put("message","Movie not found");
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        List<MovieCast> isMovieCastExists = movieCastRepository.findByMovieId(movieId);
+        Map<String, Object> response = new HashMap<>();
+        if (isMovieCastExists.isEmpty()) {
+            response.put("message", "Movie not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
-
-        response.put("message","movie cast retrieved successfully");
-        response.put("movie cast",isMovieCastExists);
+        response.put("message", "movie cast retrieved successfully");
+        response.put("movie cast", isMovieCastExists);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

@@ -50,56 +50,57 @@ public class MovieService {
             movie.setScore(movieDTO.getScore());
             movie.setAdminId(movieDTO.getAdminId());
             movie.setIsDeleted(false);
-            return  movieRepository.save(movie);
-        }catch (Exception e){
+            return movieRepository.save(movie);
+        } catch (Exception e) {
             throw new CustomServiceException("Movie could not be created due to an error");
         }
     }
-    public ResponseEntity<Movie> getMoviebyId(Long id){
-            Optional<Movie> movie=movieRepository.findById(id);
-            if(movie.isPresent()){
-                return new ResponseEntity(movie.get(), HttpStatus.OK);
-            }
-            return new ResponseEntity("Movie with the id"+id+"not found", HttpStatus.NOT_FOUND);
+
+    public ResponseEntity<Movie> getMoviebyId(Long id) {
+        Optional<Movie> movie = movieRepository.findById(id);
+        if (movie.isPresent()) {
+            return new ResponseEntity(movie.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity("Movie with the id" + id + "not found", HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<Page<Movie>> getAllMovies(int page,int size){
+    public ResponseEntity<Page<Movie>> getAllMovies(int page, int size) {
 
-        Pageable pageable= PageRequest.of(page,size);
-        Page<Movie> movies=movieRepository.findAll(pageable);
-        if(movies.hasContent()){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Movie> movies = movieRepository.findAll(pageable);
+        if (movies.hasContent()) {
             return new ResponseEntity(movies, HttpStatus.OK);
         }
         return new ResponseEntity("movies not found", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> updateMovie(MovieDTO movieDTO,Long id) {
-           Optional<Movie> isExists=movieRepository.findById(id);
-            if(isExists.isPresent()) {
-                Movie movie = isExists.get();
-                movie.setTitle(movieDTO.getTitle());
-                movie.setReleaseDate(movieDTO.getReleaseDate());
-                movie.setGenre(movieDTO.getGenre());
-                movie.setDuration(movieDTO.getDuration());
-                movie.setLanguage(movieDTO.getLanguage());
-                movie.setPosterUrl(movieDTO.getPosterUrl());
-                movie.setDescription(movieDTO.getDescription());
-                movie.setScore(movieDTO.getScore());
-                movie.setAdminId(movieDTO.getAdminId());
-                movie.setIsDeleted(movieDTO.getIsDeleted());
-                 movieRepository.save(movie);
-                 return   ResponseEntity.ok(movie);
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Movie not found");
+    public ResponseEntity<?> updateMovie(MovieDTO movieDTO, Long id) {
+        Optional<Movie> isExists = movieRepository.findById(id);
+        if (isExists.isPresent()) {
+            Movie movie = isExists.get();
+            movie.setTitle(movieDTO.getTitle());
+            movie.setReleaseDate(movieDTO.getReleaseDate());
+            movie.setGenre(movieDTO.getGenre());
+            movie.setDuration(movieDTO.getDuration());
+            movie.setLanguage(movieDTO.getLanguage());
+            movie.setPosterUrl(movieDTO.getPosterUrl());
+            movie.setDescription(movieDTO.getDescription());
+            movie.setScore(movieDTO.getScore());
+            movie.setAdminId(movieDTO.getAdminId());
+            movie.setIsDeleted(movieDTO.getIsDeleted());
+            movieRepository.save(movie);
+            return ResponseEntity.ok(movie);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Movie not found");
     }
 
-    public ResponseEntity<String> deleteMovie(Long id){
-        Optional<Movie> movie=movieRepository.findById(id);
-        if(movie.isPresent()){
-           movieRepository.deleteById(id);
-           return ResponseEntity.status(HttpStatus.OK).body("Movie deleted successfully");
+    public ResponseEntity<String> deleteMovie(Long id) {
+        Optional<Movie> movie = movieRepository.findById(id);
+        if (movie.isPresent()) {
+            movieRepository.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Movie deleted successfully");
         }
-        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("movie not found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("movie not found");
     }
 
     public ResponseEntity<?> parseCSVFile(MultipartFile file) throws IOException {
@@ -121,32 +122,32 @@ public class MovieService {
                     errors.add("Row " + record.getRecordNumber() + ": " + e.getMessage());
                 }
             }
-        }catch (Exception e) {
-        throw new RuntimeException("failed to parse csv file:"+e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("failed to parse csv file:" + e.getMessage());
         }
         if (movies.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("pLease upload a valid csv file");
         }
-            List<Movie> movieEntities = new ArrayList<>();
-            for (MovieDTO dto : movies) {
-                System.out.println("Saving Movie: " + dto.getTitle() + ", Admin ID: " + dto.getAdminId());
-                Movie movie = new Movie();
-                movie.setTitle(dto.getTitle());
-                movie.setReleaseDate(dto.getReleaseDate());
-                movie.setGenre(dto.getGenre());
-                movie.setDuration(dto.getDuration());
-                movie.setLanguage(dto.getLanguage());
-                movie.setPosterUrl(dto.getPosterUrl());
-                movie.setDescription(dto.getDescription());
-                movie.setScore(dto.getScore());
-                movie.setAdminId(dto.getAdminId());
-                movie.setIsDeleted(dto.getIsDeleted());
-                movie.setDeletedAt(dto.getDeletedAt());
-                movieEntities.add(movie);
-            }
-            movieRepository.saveAll(movieEntities);
-        Map<String, Object> response=new HashMap<>();
+        List<Movie> movieEntities = new ArrayList<>();
+        for (MovieDTO dto : movies) {
+            System.out.println("Saving Movie: " + dto.getTitle() + ", Admin ID: " + dto.getAdminId());
+            Movie movie = new Movie();
+            movie.setTitle(dto.getTitle());
+            movie.setReleaseDate(dto.getReleaseDate());
+            movie.setGenre(dto.getGenre());
+            movie.setDuration(dto.getDuration());
+            movie.setLanguage(dto.getLanguage());
+            movie.setPosterUrl(dto.getPosterUrl());
+            movie.setDescription(dto.getDescription());
+            movie.setScore(dto.getScore());
+            movie.setAdminId(dto.getAdminId());
+            movie.setIsDeleted(dto.getIsDeleted());
+            movie.setDeletedAt(dto.getDeletedAt());
+            movieEntities.add(movie);
+        }
+        movieRepository.saveAll(movieEntities);
+        Map<String, Object> response = new HashMap<>();
         response.put("message", "Upload completed");
         response.put("uploaded_movies", movieEntities);
         response.put("errors", errors);
@@ -234,4 +235,4 @@ public class MovieService {
 
         return movie;
     }
-    }
+}

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface MovieCastRepository extends JpaRepository<MovieCast,Long> {
+public interface MovieCastRepository extends JpaRepository<MovieCast, Long> {
 
-List<MovieCast> findByMovieId(Long movieId);
+    List<MovieCast> findByMovieId(Long movieId);
 }
